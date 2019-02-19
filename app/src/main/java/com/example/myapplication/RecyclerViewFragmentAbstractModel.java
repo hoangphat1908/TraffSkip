@@ -2,19 +2,19 @@ package com.example.myapplication;
 
 import java.util.ArrayList;
 
-public class AbstractModel {
+public class RecyclerViewFragmentAbstractModel {
 
     private String title;
 
     private String message;
 
 
-    public AbstractModel(String title, String message) {
+    public RecyclerViewFragmentAbstractModel(String title, String message) {
         this.title = title;
         this.message = message;
     }
 
-    public AbstractModel() {
+    public RecyclerViewFragmentAbstractModel() {
 
     }
 
