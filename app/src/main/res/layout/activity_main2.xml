@@ -15,7 +15,24 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:theme="@style/ToolbarStyle"
         app:titleTextColor="@android:color/white" />
-
+    <TextView
+        android:id="@+id/tv_greetings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/btn_to_auth"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text= "@string/login_register"
+        android:onClick="switchToAuth"/>
+    <Button
+        android:id="@+id/btn_sign_out"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text= "@string/logout_register"
+        android:onClick="signOut"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"

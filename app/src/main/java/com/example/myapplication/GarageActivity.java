@@ -14,6 +14,8 @@ import android.view.View;
 import java.util.ArrayList;
 
 
+import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
@@ -28,6 +30,8 @@ import android.text.Spanned;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class GarageActivity extends AppCompatActivity {
@@ -50,21 +54,37 @@ public class GarageActivity extends AppCompatActivity {
 
     private ArrayList<AbstractModel> modelList = new ArrayList<>();
 
-
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
-
+        mAuth = FirebaseAuth.getInstance();
+        authenticate();
         isServiceOK();
-
-
         // ButterKnife.bind(this);
         findViews();
         initToolbar("Parking Space");
         setAdapter();
 
 
+    }
+    public void authenticate() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        TextView greetingsTV = (TextView) findViewById(R.id.tv_greetings);
+        Button authButton = (Button) findViewById(R.id.btn_to_auth);
+        Button signOutButton = (Button) findViewById(R.id.btn_sign_out);
+        if (currentUser != null) {
+            greetingsTV.setVisibility(View.VISIBLE);
+            greetingsTV.setText("Hello, " + currentUser.getEmail());
+            authButton.setVisibility(View.GONE);
+            signOutButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            greetingsTV.setVisibility(View.GONE);
+            authButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility(View.GONE);
+        }
     }
 
     private void findViews() {
@@ -212,4 +232,13 @@ public class GarageActivity extends AppCompatActivity {
       //  return false;
     }
 
+
+    public void switchToAuth(View view) {
+        startActivity(new Intent(this, AuthorizationActivity.class));
+    }
+
+    public void signOut(View view) {
+        FirebaseAuth.getInstance().signOut();
+        authenticate();
+    }
 }
