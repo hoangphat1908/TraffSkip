@@ -1,47 +1,45 @@
 package com.example.myapplication;
 
 import android.Manifest;
-import android.app.Activity;
+import android.animation.ObjectAnimator;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.maps.GeoApiContext;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
-import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
-    private GoogleMap mMap;
+
+
+public class MapsActivity extends Fragment implements OnMapReadyCallback, View.OnClickListener {
+
+    private GoogleMap mGoogleMap;
+    private MapView mMapView;
+    private RelativeLayout mMapContainer;
+
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
     static Location lastLocation = null;
@@ -54,23 +52,73 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG = "MapsActivity";
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
+    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    private RecyclerView mRecyclerView;
+
+    private static final int MAP_LAYOUT_STATE_CONTRACTED = 0;
+    private static final int MAP_LAYOUT_STATE_EXPANDED = 1;
+    private int mMapLayoutState = 0;
+
+    private LatLngBounds mMapBoundary;
+
+    private GeoApiContext mGeoApiContext = null;
 
     private Boolean mLocationPermissionGranted = false;
 
+    String serverKey= "AIzaSyByWXCj67x1VrBrh_7NuUS4fRkRnIDGPys";
+
+
+    //protected
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+       // setContentView(R.layout.activity_maps);
 
-        getLocationPermission();
+      getLocationPermission();
 
+
+        /*
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        */
+
+
+        //setHasOptionsMenu(true);
+
+        // *** IMPORTANT ***
+        // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
+        // objects or sub-Bundles.
+        Bundle mapViewBundle = null;
+        if (savedInstanceState != null) {
+            mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
+        }
+
+
     }
+@Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstancesState)
+{
+    View view = inflater.inflate(R.layout.activity_maps,container,false);
+    mRecyclerView = view.findViewById(R.id.recycler_view_activity);
+    mMapContainer = view.findViewById(R.id.map_container);
+    mMapView = (MapView) view.findViewById(R.id.user_list_map);
 
+    view.findViewById(R.id.btn_full_screen_map).setOnClickListener(this);
 
+    Bundle mapViewBundle = null;
+    if(savedInstancesState != null)
+    {
+        mapViewBundle = savedInstancesState.getBundle(MAPVIEW_BUNDLE_KEY);
+    }
+    mMapView.onCreate(mapViewBundle);
+
+    mMapView.getMapAsync(this);
+
+    return view;
+}
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -81,22 +129,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap map) {
 
         Log.d(TAG, "onMapReady: Map is ready");
 
-        mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        /*
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-       */
+        // Test
+        addMapMarker(map,37.338787,-121.880388,"Hello world");
+        addMapMarker(map,37.334157,-121.882031,"Hello");
+
 
         if (mLocationPermissionGranted) {
             getDeviceLocation();
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 // TODO: Consider calling
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
@@ -106,21 +151,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 // for ActivityCompat#requestPermissions for more details.
                 return;
             }
-            mMap.setMyLocationEnabled(true);
+            map.setMyLocationEnabled(true);
+            mGoogleMap = map;
         }
+
     }
+
+    private void addMapMarker ( GoogleMap mMap, double lat, double lng, String info)
+    {
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(lat,lng))
+                .title(info));
+    }
+
+
 
     // Checks and grants permission for Location.
     private void getLocationPermission() {
         Log.d(TAG, "getLocationPermission: getting lcoation permission");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION
         };
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mLocationPermissionGranted = true;
         } else {
-            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(getActivity(), permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -146,12 +203,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting device lcoation");
 
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         try {
 
             if (mLocationPermissionGranted) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     // TODO: Consider calling
                     //    ActivityCompat#requestPermissions
                     // here to request the missing permissions, and then overriding
@@ -184,16 +241,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d(TAG, "getDeviceLocation: Security Exception:"+e.getMessage());
         }
     }
+
     // moving the camera to user location
     private void moveCamera(LatLng latLng, float zoom){
         Log.d(TAG, "moveCamera: camera to self lat:"+ latLng.latitude + ", lng: "+ latLng.longitude);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
+     //  mGoogleMap = ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.maps_activity)).getMap();
+
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,zoom));
     }
 
     private void displayDirection(LatLng point)
     {
         // clear map
-        mMap.clear();
+        mGoogleMap.clear();
 
         // Creating MarkerOptions
         MarkerOptions options = new MarkerOptions();
@@ -203,163 +263,101 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
     }
 
+    private void expandMapAnimation(){
+        ViewWeightAnimationWrapper mapAnimationWrapper = new ViewWeightAnimationWrapper(mMapContainer);
+        ObjectAnimator mapAnimation = ObjectAnimator.ofFloat(mapAnimationWrapper,
+                "weight",
+                50,
+                100);
+        mapAnimation.setDuration(800);
 
+        ViewWeightAnimationWrapper recyclerAnimationWrapper = new ViewWeightAnimationWrapper(mRecyclerView);
+        ObjectAnimator recyclerAnimation = ObjectAnimator.ofFloat(recyclerAnimationWrapper,
+                "weight",
+                50,
+                0);
+        recyclerAnimation.setDuration(800);
 
-    /**
-     * Written By George Mathew
-     * Courtesy : http://wptrafficanalyzer.in/blog/drawing-driving-route-directions-between-two-locations-using-google-directions-in-google-map-android-api-v2/
-     * */
-    private String getDirectionsUrl(LatLng origin,LatLng dest){
-
-        // Origin of route
-        String str_origin = "origin="+origin.latitude+","+origin.longitude;
-
-        // Destination of route
-        String str_dest = "destination="+dest.latitude+","+dest.longitude;
-
-        // Sensor enabled
-        String sensor = "sensor=false";
-
-        // Building the parameters to the web service
-        String parameters = str_origin+"&"+str_dest+"&"+sensor;
-
-        // Output format
-        String output = "json";
-
-        // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
-
-        return url;
-    }
-    /** A method to download json data from url */
-    private String downloadUrl(String strUrl) throws IOException {
-        String data = "";
-        InputStream iStream = null;
-        HttpURLConnection urlConnection = null;
-        try{
-            URL url = new URL(strUrl);
-
-            // Creating an http connection to communicate with url
-            urlConnection = (HttpURLConnection) url.openConnection();
-
-            // Connecting to url
-            urlConnection.connect();
-
-            // Reading data from url
-            iStream = urlConnection.getInputStream();
-
-            BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
-
-            StringBuffer sb = new StringBuffer();
-
-            String line = "";
-            while( ( line = br.readLine()) != null){
-                sb.append(line);
-            }
-
-            data = sb.toString();
-
-            br.close();
-
-        }catch(Exception e){
-            Log.d("Exception while downloading url", e.toString());
-        }finally{
-            iStream.close();
-            urlConnection.disconnect();
-        }
-        return data;
+        recyclerAnimation.start();
+        mapAnimation.start();
     }
 
-    // Fetches data from url passed
-    private class DownloadTask extends AsyncTask<String, Void, String> {
+    private void contractMapAnimation(){
+        ViewWeightAnimationWrapper mapAnimationWrapper = new ViewWeightAnimationWrapper(mMapContainer);
+        ObjectAnimator mapAnimation = ObjectAnimator.ofFloat(mapAnimationWrapper,
+                "weight",
+                100,
+                50);
+        mapAnimation.setDuration(800);
 
-        // Downloading data in non-ui thread
-        @Override
-        protected String doInBackground(String... url) {
+        ViewWeightAnimationWrapper recyclerAnimationWrapper = new ViewWeightAnimationWrapper(mRecyclerView);
+        ObjectAnimator recyclerAnimation = ObjectAnimator.ofFloat(recyclerAnimationWrapper,
+                "weight",
+                0,
+                50);
+        recyclerAnimation.setDuration(800);
 
-            // For storing data from web service
-            String data = "";
-
-            try{
-                // Fetching the data from web service
-                data = downloadUrl(url[0]);
-            }catch(Exception e){
-                Log.d("Background Task",e.toString());
-            }
-            return data;
-        }
-
-        // Executes in UI thread, after the execution of
-        // doInBackground()
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            ParserTask parserTask = new ParserTask();
-
-            // Invokes the thread for parsing the JSON data
-            parserTask.execute(result);
-        }
+        recyclerAnimation.start();
+        mapAnimation.start();
     }
 
-    /** A class to parse the Google Places in JSON format */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
+    @Override
+    public void onResume() {
+        super.onResume();
+        mMapView.onResume();
+    }
 
-        // Parsing the data in non-ui thread
-        @Override
-        protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
+    @Override
+    public void onStart() {
+        super.onStart();
+        mMapView.onStart();
+    }
 
-            JSONObject jObject;
-            List<List<HashMap<String, String>>> routes = null;
+    @Override
+    public void onStop() {
+        super.onStop();
+        mMapView.onStop();
+    }
 
-            try{
-                jObject = new JSONObject(jsonData[0]);
-                DirectionJSONParser parser = new DirectionJSONParser();
+    @Override
+    public void onPause() {
+        mMapView.onPause();
+        super.onPause();
+    }
 
-                // Starts parsing data
-                routes = parser.parse(jObject);
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            return routes;
-        }
+    @Override
+    public void onDestroy() {
+        mMapView.onDestroy();
+        super.onDestroy();
+    }
 
-        // Executes in UI thread, after the parsing process
-        @Override
-        protected void onPostExecute(List<List<HashMap<String, String>>> result) {
-            ArrayList<LatLng> points = null;
-            PolylineOptions lineOptions = null;
-            MarkerOptions markerOptions = new MarkerOptions();
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
+    }
 
-            // Traversing through all the routes
-            for(int i=0;i<result.size();i++){
-                points = new ArrayList<LatLng>();
-                lineOptions = new PolylineOptions();
-
-                // Fetching i-th route
-                List<HashMap<String, String>> path = result.get(i);
-
-                // Fetching all the points in i-th route
-                for(int j=0;j<path.size();j++){
-                    HashMap<String,String> point = path.get(j);
-
-                    double lat = Double.parseDouble(point.get("lat"));
-                    double lng = Double.parseDouble(point.get("lng"));
-                    LatLng position = new LatLng(lat, lng);
-
-                    points.add(position);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btn_full_screen_map:{
+                if(mMapLayoutState == MAP_LAYOUT_STATE_CONTRACTED)
+                {
+                    mMapLayoutState = MAP_LAYOUT_STATE_EXPANDED;
+                    expandMapAnimation();
                 }
-
-                // Adding all the points in the route to LineOptions
-                lineOptions.addAll(points);
-                lineOptions.width(2);
-                lineOptions.color(Color.RED);
+                else if(mMapLayoutState == MAP_LAYOUT_STATE_EXPANDED)
+                {
+                    mMapLayoutState = MAP_LAYOUT_STATE_CONTRACTED;
+                    contractMapAnimation();
+                }
+                break;
             }
-
-            // Drawing polyline in the Google Map for the i-th route
-            mMap.addPolyline(lineOptions);
         }
     }
+
+
+
 
 
 }

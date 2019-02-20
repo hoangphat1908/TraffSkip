@@ -50,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void logIn(){
-        Intent intent = new Intent(this, GarageActivity.class);
+        Intent intent = new Intent(this, ViewActivity.class);
         startActivity(intent);
     }
 

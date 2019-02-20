@@ -56,7 +56,7 @@ public class CreateAccountActivity extends AppCompatActivity {
         db.collection("users").document(user.getUid()).set(newUser);
     }
     public void autoLogin(){
-        Intent intent = new Intent(this, GarageActivity.class);
+        Intent intent = new Intent(this, ViewActivity.class);
         startActivity(intent);
     }
 

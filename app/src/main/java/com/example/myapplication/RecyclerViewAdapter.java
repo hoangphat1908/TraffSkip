@@ -19,17 +19,17 @@ import android.support.v7.widget.LinearLayoutManager;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<AbstractModel> modelList;
+    private ArrayList<RecyclerViewFragmentAbstractModel> modelList;
 
     private OnItemClickListener mItemClickListener;
 
 
-    public RecyclerViewAdapter(Context context, ArrayList<AbstractModel> modelList) {
+    public RecyclerViewAdapter(Context context, ArrayList<RecyclerViewFragmentAbstractModel> modelList) {
         this.mContext = context;
         this.modelList = modelList;
     }
 
-    public void updateList(ArrayList<AbstractModel> modelList) {
+    public void updateList(ArrayList<RecyclerViewFragmentAbstractModel> modelList) {
         this.modelList = modelList;
         notifyDataSetChanged();
 
@@ -48,7 +48,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         //Here you can fill your row view
         if (holder instanceof ViewHolder) {
-            final AbstractModel model = getItem(position);
+            final RecyclerViewFragmentAbstractModel model = getItem(position);
             ViewHolder genericViewHolder = (ViewHolder) holder;
 
             genericViewHolder.itemTxtTitle.setText(model.getTitle());
@@ -69,13 +69,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.mItemClickListener = mItemClickListener;
     }
 
-    private AbstractModel getItem(int position) {
+    private RecyclerViewFragmentAbstractModel getItem(int position) {
         return modelList.get(position);
     }
 
 
     public interface OnItemClickListener {
-        void onItemClick(View view, int position, AbstractModel model);
+        void onItemClick(View view, int position, RecyclerViewFragmentAbstractModel model);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
