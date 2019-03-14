@@ -20,13 +20,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     private Context mContext;
     private ArrayList<RecyclerViewFragmentAbstractModel> modelList;
-
+    private itemListRecyclerClickListener itemClickListener;
     private OnItemClickListener mItemClickListener;
 
 
-    public RecyclerViewAdapter(Context context, ArrayList<RecyclerViewFragmentAbstractModel> modelList) {
+    public RecyclerViewAdapter(Context context, ArrayList<RecyclerViewFragmentAbstractModel> modelList, itemListRecyclerClickListener clickListener) {
         this.mContext = context;
         this.modelList = modelList;
+
+        itemClickListener = clickListener;
     }
 
     public void updateList(ArrayList<RecyclerViewFragmentAbstractModel> modelList) {
@@ -36,11 +38,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType)  {
 
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_recycler_list, viewGroup, false);
+        final ViewHolder holder = new ViewHolder(view,itemClickListener);
 
-        return new ViewHolder(view);
+        return holder;
+        //return new ViewHolder(view);
     }
 
     @Override
@@ -51,8 +55,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             final RecyclerViewFragmentAbstractModel model = getItem(position);
             ViewHolder genericViewHolder = (ViewHolder) holder;
 
-            genericViewHolder.itemTxtTitle.setText(model.getTitle());
-            genericViewHolder.itemTxtMessage.setText(model.getMessage());
+
+            genericViewHolder.itemTxtMessage.setText(model.getItemName());
+           // genericViewHolder.itemTxtMessage.setText(Integer.toString(model.getCurrentCompacity()));
+           // genericViewHolder.itemTxtMessage.setText(Integer.toString(model.getMaxCompacity()));
+
 
 
         }
@@ -78,12 +85,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         void onItemClick(View view, int position, RecyclerViewFragmentAbstractModel model);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private ImageView imgUser;
         private TextView itemTxtTitle;
         private TextView itemTxtMessage;
 
+        itemListRecyclerClickListener itemClickListener;
 
         // @BindView(R.id.img_user)
         // ImageView imgUser;
@@ -95,7 +103,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         // RadioButton itemTxtMessage;
         // @BindView(R.id.check_list)
         // CheckBox itemCheckList;
-        public ViewHolder(final View itemView) {
+        public ViewHolder(final View itemView, itemListRecyclerClickListener clickListener) {
             super(itemView);
 
             // ButterKnife.bind(this, itemView);
@@ -104,7 +112,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             this.itemTxtTitle = (TextView) itemView.findViewById(R.id.item_txt_title);
             this.itemTxtMessage = (TextView) itemView.findViewById(R.id.item_txt_message);
 
+            itemClickListener = clickListener;
+            itemView.setOnClickListener(this);
 
+            /*
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -113,8 +124,18 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 }
             });
-
+*/
         }
+
+        @Override
+        public void onClick(View v) {
+            itemClickListener.onItemClicked(getAdapterPosition());
+        }
+    }
+
+    public interface itemListRecyclerClickListener
+    {
+        void onItemClicked(int position);
     }
 
 }

@@ -1,13 +1,17 @@
 package com.example.myapplication;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.widget.Toast;
 import android.view.Menu;
 import android.support.v7.widget.SearchView;
@@ -20,19 +24,31 @@ import android.text.Spanned;
 import android.view.ViewGroup;
 import android.view.MenuInflater;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+
+import static android.support.constraint.Constraints.TAG;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link RecyclerViewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 
-
-public class RecyclerViewFragment extends Fragment {
+//implements RecyclerViewAdapter.itemListRecyclerClickListener
+public class RecyclerViewFragment extends Fragment implements RecyclerViewAdapter.itemListRecyclerClickListener {
 
     //  Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    DataCommunication mData;
+    private GoogleMap mGoogleMap;
+
 
     private String mParam1;
     private String mParam2;
@@ -41,11 +57,10 @@ public class RecyclerViewFragment extends Fragment {
     private RecyclerView recyclerView;
 
 
-
     private RecyclerViewAdapter mAdapter;
 
     private ArrayList<RecyclerViewFragmentAbstractModel> modelList = new ArrayList<>();
-
+    private HashMap<Integer, Marker> markerList = new HashMap<Integer, Marker>();
 
     public RecyclerViewFragment() {
         // Required empty public constructor
@@ -83,6 +98,9 @@ public class RecyclerViewFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
     }
 
 
@@ -94,6 +112,8 @@ public class RecyclerViewFragment extends Fragment {
 
         // ButterKnife.bind(this);
         findViews(view);
+
+
 
         return view;
 
@@ -167,10 +187,12 @@ public class RecyclerViewFragment extends Fragment {
                 ArrayList<RecyclerViewFragmentAbstractModel> filterList = new ArrayList<RecyclerViewFragmentAbstractModel>();
                 if (s.length() > 0) {
                     for (int i = 0; i < modelList.size(); i++) {
-                        if (modelList.get(i).getTitle().toLowerCase().contains(s.toString().toLowerCase())) {
+
+                        if (modelList.get(i).getItemName().toLowerCase().contains(s.toString().toLowerCase())) {
                             filterList.add(modelList.get(i));
                             mAdapter.updateList(filterList);
                         }
+
                     }
 
                 } else {
@@ -185,28 +207,19 @@ public class RecyclerViewFragment extends Fragment {
 
     private void setAdapter() {
 
-        modelList.add(new RecyclerViewFragmentAbstractModel("North Garage", "500/1500 " + " Parking Space Used"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("South Garage", "1000/1500 " + " Parking Space Used"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("West Garage", "1500/1500 " + " Parking Space Used"));
 
-        modelList.add(new RecyclerViewFragmentAbstractModel("Android", "Hello " + " Android"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Beta", "Hello " + " Beta"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Cupcake", "Hello " + " Cupcake"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Donut", "Hello " + " Donut"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Eclair", "Hello " + " Eclair"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Froyo", "Hello " + " Froyo"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Gingerbread", "Hello " + " Gingerbread"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Honeycomb", "Hello " + " Honeycomb"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Ice Cream Sandwich", "Hello " + " Ice Cream Sandwich"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Jelly Bean", "Hello " + " Jelly Bean"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("KitKat", "Hello " + " KitKat"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Lollipop", "Hello " + " Lollipop"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Marshmallow", "Hello " + " Marshmallow"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Nougat", "Hello " + " Nougat"));
-        modelList.add(new RecyclerViewFragmentAbstractModel("Android O", "Hello " + " Android O"));
+        modelList.add(new RecyclerViewFragmentAbstractModel(0,"North Garage", 37.338787, -121.880388, 500, 1500));
+        modelList.add(new RecyclerViewFragmentAbstractModel(1,"South Garage", 37.334157, -121.882031, 200, 1500));
+        modelList.add(new RecyclerViewFragmentAbstractModel(2,"South Garage", 37.334157, -121.882031, 200, 1500));
 
 
-        mAdapter = new RecyclerViewAdapter(getActivity(), modelList);
+        //Log.d(TAG, "setAdapter: "+modelList.get(1).getItemName());
+
+
+
+
+
+        mAdapter = new RecyclerViewAdapter(getActivity(), modelList,this);
 
         recyclerView.setHasFixedSize(true);
 
@@ -223,12 +236,57 @@ public class RecyclerViewFragment extends Fragment {
             public void onItemClick(View view, int position, RecyclerViewFragmentAbstractModel model) {
 
                 //handle item click events here
-                Toast.makeText(getActivity(), "Hey " + model.getTitle(), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(getActivity(), "Hey " + model.getTitle(), Toast.LENGTH_SHORT).show();
 
 
             }
         });
 
+       mData.setModelList(modelList);
+
+       
+
+
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mData = (DataCommunication) context;
+
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString()
+                    + " must implement DataCommunication");
+        }
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+
+
+        markerList = mData.getMarkerList();
+
+        int selectedItemId = modelList.get(position).getItemId();
+
+        for(HashMap.Entry<Integer, Marker> mMarkerList: markerList.entrySet())
+        {
+
+            if( selectedItemId == mMarkerList.getKey())
+            {
+                Log.d(TAG, "onItemClicked: SelectItemId"+selectedItemId+",  MarkerList Key: "+ mMarkerList.getKey());
+
+                mData.changeCameraListener(modelList.get(position).getLat(),modelList.get(position).getLng());
+
+                break;
+
+
+            }
+
+        }
 
     }
 

@@ -26,17 +26,19 @@
                 android:layout_height="match_parent"
                 android:id="@+id/user_list_map" />
 
+
             <ImageButton
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:src="@android:drawable/ic_menu_mapmode"
+                android:src="@android:drawable/ic_menu_revert"
                 android:background="@android:color/white"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_marginTop="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginEnd="10dp"
-                android:id="@+id/btn_full_screen_map"/>
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:id="@+id/btn_reset_map"/>
+
         </RelativeLayout>
 
 

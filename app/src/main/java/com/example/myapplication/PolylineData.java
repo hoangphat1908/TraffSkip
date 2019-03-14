@@ -1,0 +1,43 @@
+package com.example.myapplication;
+
+import com.google.android.gms.maps.model.Polyline;
+import com.google.maps.model.DirectionsLeg;
+
+/*
+From CodingWithMitch Tutorial: Clicking and Highlighting Polylines
+https://www.youtube.com/watch?v=3f09neIN89o&list=PLgCYzUzKIBE-SZUrVOsbYMzH7tPigT3gi&index=21
+ */
+public class PolylineData {
+
+    private Polyline polyline;
+    private DirectionsLeg leg;
+
+    public PolylineData(Polyline polyline, DirectionsLeg leg) {
+        this.polyline = polyline;
+        this.leg = leg;
+    }
+
+    public Polyline getPolyline() {
+        return polyline;
+    }
+
+    public void setPolyline(Polyline polyline) {
+        this.polyline = polyline;
+    }
+
+    public DirectionsLeg getLeg() {
+        return leg;
+    }
+
+    public void setLeg(DirectionsLeg leg) {
+        this.leg = leg;
+    }
+
+    @Override
+    public String toString() {
+        return "PolylineData{" +
+                "polyline=" + polyline +
+                ", leg=" + leg +
+                '}';
+    }
+}
