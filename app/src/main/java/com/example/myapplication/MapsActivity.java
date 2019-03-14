@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -55,6 +56,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +64,7 @@ import java.util.Map;
 
 
 
-public class MapsActivity extends Fragment implements OnMapReadyCallback, View.OnClickListener,  GoogleMap.OnPolylineClickListener {
+public class MapsActivity extends Fragment implements OnMapReadyCallback, View.OnClickListener,  GoogleMap.OnPolylineClickListener,GoogleMap.OnInfoWindowClickListener {
 
 
     DataCommunication mData;
@@ -174,6 +176,8 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
 
             mData.setMarkerList(mHashMap);
 
+            map.setOnInfoWindowClickListener(this); //////////test
+
         }
         if (mLocationPermissionGranted) {
             getDeviceLocation();
@@ -189,8 +193,10 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
             }
             map.setMyLocationEnabled(true);
             mGoogleMap = map;
-            mGoogleMap.setOnPolylineClickListener(this);
+            map.setOnPolylineClickListener(this);
         }
+
+
 
     }
 
@@ -256,28 +262,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
         );
 
-        // mMap.setOnMarkerClickListener(this);
-        //  mGoogleMap.setOnInfoWindowClickListener(this);
 
-        /*
-       mGoogleMap.setOnInfoWindowClickListener(new mGoogleMap.OnInfoWindowClickListener(){
-        @Override
-        public void onInfoWindowClick(Marker marker) {
-
-
-
-        //send data to citygallery activity
-        Intent intent = new Intent(getContext(), CItyGalleryActivity.class);
-        intent.putExtra("cityChoise",picCities.get(0).get_city().toString());
-        startActivity(intent);
-
-
-
-    }
-    }
-
-       );
-*/
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -290,6 +275,8 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
                 return false;
             }
         });
+
+
 
 
     }
@@ -551,26 +538,32 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
         });
     }
 
-// OnInfoWindowClickListenerCallback
-    //googleMap.setOnInfoWindowClickListener(listener)
 
-    /*
-@Override
+    @Override
     public void onInfoWindowClick(final Marker marker) {
-        if(marker.getSnippet().equals("This is you")){
-            marker.hideInfoWindow();
-        }
-        else{
+
+        if(marker.getTitle().contains("Trip")){
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage(marker.getSnippet())
+            builder.setMessage("Open Google Maps?")
                     .setCancelable(true)
                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
-                            Log.d(TAG, "onClick: OnInfoWindowClick reached");
-                           selectedMarker = marker;
-                            calculateDirections(marker);
-                            dialog.dismiss();
+                            String latitude = String.valueOf(marker.getPosition().latitude);
+                            String longitude = String.valueOf(marker.getPosition().longitude);
+                            Uri gmmIntentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude);
+                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                            mapIntent.setPackage("com.google.android.apps.maps");
+
+                            try{
+                                if (mapIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+                                    startActivity(mapIntent);
+                                }
+                            }catch (NullPointerException e){
+                                Log.e(TAG, "onClick: NullPointerException: Couldn't open map." + e.getMessage() );
+                                Toast.makeText(getActivity(), "Couldn't open map", Toast.LENGTH_SHORT).show();
+                            }
+
                         }
                     })
                     .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -581,9 +574,34 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
             final AlertDialog alert = builder.create();
             alert.show();
         }
-    }
+        else{
+            if(marker.getSnippet().equals("This is you")){
+                marker.hideInfoWindow();
+            }
+            else{
 
-*/
+                final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage(marker.getSnippet())
+                        .setCancelable(true)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                resetSelectedMarker();
+                                selectedMarker = marker;
+                                calculateDirections(marker);
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                                dialog.cancel();
+                            }
+                        });
+                final AlertDialog alert = builder.create();
+                alert.show();
+            }
+        }
+
+    }
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -633,27 +651,6 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
         mMapView.onLowMemory();
     }
 
-    /*
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.btn_full_screen_map:{
-                if(mMapLayoutState == MAP_LAYOUT_STATE_CONTRACTED)
-                {
-                    mMapLayoutState = MAP_LAYOUT_STATE_EXPANDED;
-                    expandMapAnimation();
-                }
-                else if(mMapLayoutState == MAP_LAYOUT_STATE_EXPANDED)
-                {
-                    mMapLayoutState = MAP_LAYOUT_STATE_CONTRACTED;
-                    contractMapAnimation();
-                }
-                break;
-            }
-        }
-    }
-*/
-
     @Override
     public void onPolylineClick(Polyline polyline) {
         int index = 0;
@@ -675,6 +672,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
                         .snippet("Duration: " + polylineData.getLeg().duration)
                 );
                 marker.showInfoWindow();
+
                 TripMarkers.add(marker);
             } else {
                 polylineData.getPolyline().setColor(Color.GRAY);

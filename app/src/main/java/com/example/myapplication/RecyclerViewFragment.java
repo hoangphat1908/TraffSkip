@@ -244,7 +244,7 @@ public class RecyclerViewFragment extends Fragment implements RecyclerViewAdapte
 
        mData.setModelList(modelList);
 
-       
+
 
 
     }
