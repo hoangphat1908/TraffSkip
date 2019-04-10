@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.support.v4.app.Fragment;
 import android.app.AlertDialog;
 import android.Manifest;
 import android.animation.ObjectAnimator;
@@ -13,6 +14,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -36,7 +38,10 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.maps.DirectionsApiRequest;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PendingResult;
@@ -45,6 +50,7 @@ import com.google.maps.model.DirectionsResult;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.model.DirectionsRoute;
+import com.google.maps.model.Duration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,14 +69,16 @@ import java.util.List;
 import java.util.Map;
 
 
-
 public class MapsActivity extends Fragment implements OnMapReadyCallback, View.OnClickListener,  GoogleMap.OnPolylineClickListener,GoogleMap.OnInfoWindowClickListener {
 
+    // The map is loading first in order, and ViewActivity last, so I have to load the database here for the map to use it initially.
+    private FirebaseFirestore database = FirebaseFirestore.getInstance();
 
     DataCommunication mData;
     public GoogleMap mGoogleMap;
     private MapView mMapView;
     private RelativeLayout mMapContainer;
+    private String tempDuration;
 
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
@@ -86,7 +94,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
     private static final String FINE_LOCATION = Manifest.permission.ACCESS_FINE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    private RecyclerView mRecyclerView;
+
     private Location currentLocation;
     private ArrayList<PolylineData> polylineData = new ArrayList<>();
     private static final int MAP_LAYOUT_STATE_CONTRACTED = 0;
@@ -95,8 +103,12 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
     private Marker selectedMarker = null;
     private ArrayList<Marker> TripMarkers = new ArrayList<>();
 
-    private HashMap<Integer, Marker> mHashMap = new HashMap<Integer, Marker>();
-    private ArrayList<RecyclerViewFragmentAbstractModel> modelList = new ArrayList<RecyclerViewFragmentAbstractModel>();
+    private HashMap<Marker, Integer> mHashMap = new HashMap<Marker, Integer>();
+
+
+    private List<LocationSpotModel> locationSpotList = new ArrayList<LocationSpotModel>();
+    //
+
 
     private LatLngBounds mMapBoundary;
 
@@ -107,7 +119,6 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
 
     private Boolean mLocationPermissionGranted = false;
 
-    //  String serverKey= "AIzaSyAyVpB5uv369pOP7LpmuqUGyxV_aNon20g";
 
     public MapsActivity()
     {
@@ -132,12 +143,12 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
         }
 
 
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstancesState) {
         View view = inflater.inflate(R.layout.activity_maps, container, false);
-        mRecyclerView = view.findViewById(R.id.recycler_view_activity);
         mMapContainer = view.findViewById(R.id.map_container);
         mMapView = (MapView) view.findViewById(R.id.user_list_map);
 
@@ -153,30 +164,24 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
 
         mMapView.getMapAsync(this);
 
+
         return view;
     }
 
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
     public void onMapReady(GoogleMap map) {
+
+
+
 
         Log.d(TAG, "onMapReady: Map is ready");
 
         if (map != null) {
-            createRecyclerViewList();
-            addMapMarkers(map);
 
-            mData.setMarkerList(mHashMap);
 
-            map.setOnInfoWindowClickListener(this); //////////test
+        createLocationSpotList(map);
+
+            map.setOnInfoWindowClickListener(this);
 
         }
         if (mLocationPermissionGranted) {
@@ -214,72 +219,114 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
         }
     }
 
-    //recreating for map usage, gets the modelList from RecyclerView Fragment.
-    private void createRecyclerViewList() {
-        modelList = mData.getModelList();
+
+    private void createLocationSpotList(final GoogleMap map) {
+
+
+
+        database.collection("locationSpots").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                locationSpotList = queryDocumentSnapshots.toObjects(LocationSpotModel.class);
+
+                Log.d(TAG, "createLocationSpotList:  onSuccess Called:  size: "+locationSpotList.size());
+
+                addMapMarkers(map);
+
+
+            }
+        });
+
+            Log.d(TAG, "createLocationSpotList: Error Exception");
+
+
+       // locationSpotList = mData.getlocationSpotList();
+
+        Log.d(TAG, "createLocationSpotList: called, size: "+locationSpotList.size());
 
     }
 
     // add group of markers here for loading groups of them
     private void addMapMarkers(GoogleMap map) {
 
-        for (int i = 0; i < modelList.size(); i++) {
+        for (int i = 0; i < locationSpotList.size(); i++)
+        {
+            Log.d(TAG, "addMapMarkers: locationSpotList "+ i+", locationName: "+locationSpotList.get(i).getLocationName());
+            
             Marker marker = map.addMarker(new MarkerOptions()
-                    .position(new LatLng(modelList.get(i).getLat(), modelList.get(i).getLng()))
-                    .title(modelList.get(i).getItemName())
-                    .snippet(modelList.get(i).getItemName())
+                    .position(new LatLng(locationSpotList.get(i).getLatlng().getLatitude(), locationSpotList.get(i).getLatlng().getLongitude()))
+                    .title(locationSpotList.get(i).getLocationName())
+                    .snippet(locationSpotList.get(i).getLocationName())
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
             );
+
+            Log.d(TAG, "creatingLocationSpot: "+i);
+            Log.d(TAG, "locationSpotList Size : "+locationSpotList.size());
+
+            //final int locationSpotIndex=i;
 
             map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker) {
                     resetSelectedMarker();
-                    calculateDirections(marker);
+                    BottomSheetFrag infoSheet = new BottomSheetFrag();
+                   // calculateDirections(marker);
+
+                    // TODO: Could probably find a better way to do this for syncing
+                    // Problem - Calculating the Duration time takes a while, so infoSheet.Duration = null in meantime.
+                    // tempDuration = null; also lags, so clicking on a different marker does not completely resets until later.
+                    while(tempDuration == null)
+                    {
+                        calculateDuration(marker);
+                        infoSheet.duration = tempDuration;
+                        Log.d(TAG, "onMarkerClick: TempDuration " + tempDuration);
+                    }
+
+               //     calculateDuration(marker);
+
+                    infoSheet.duration = tempDuration;
+                    Log.d(TAG, "onMarkerClick: TempDuration " + tempDuration);
+
+                    Integer locationSpotIndex = mHashMap.get(marker);
+
+
+
+                    //Create Bottom Sheet when marker clicked
+
+
+                    infoSheet.locationMarker = marker;
+
+
+ //                   Log.d(TAG, "onMarkerClick: TempDuration " + tempDuration);
+
+//                    Log.d(TAG, "addMapMarkers: locationSpotList "+ locationSpotIndex+", locationName: "+locationSpotList.get(locationSpotIndex).getLocationName());
+
+
+                    infoSheet.setLocationSpot(locationSpotList.get(locationSpotIndex));
+
+                    infoSheet.show(getActivity().getSupportFragmentManager(),"infoSheet");
+
+                  //  tempDuration = null;
+
+
                     selectedMarker = marker;
                     Log.d(TAG, "onMarkerClick: onClick Tested");
 
+                    tempDuration = null;
                     // Triggered when user click any marker on the map
                     return false;
                 }
             });
 
-            mHashMap.put(i, marker);
-
+            mHashMap.put(marker, i);
+            Log.d(TAG, "addMapMarkers: called");
           //  Log.d(TAG, "hashMap: i : "+i);
            // Log.d(TAG, "hashMap: i : "+mHashMap.get('1'));
         }
 
     }
 
-    private void addMapMarker(GoogleMap mMap, double lat, double lng, String info, String snippet) {
-
-
-        mMap.addMarker(new MarkerOptions()
-                .position(new LatLng(lat, lng))
-                .title(info)
-                .snippet(snippet)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-        );
-
-
-
-        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                resetSelectedMarker();
-                calculateDirections(marker);
-                selectedMarker = marker;
-                Log.d(TAG, "onMarkerClick: onClick Tested");
-                // Triggered when user click any marker on the map
-                return false;
-            }
-        });
-
-
-
-
-    }
 
     private void resetMap() {
         if (mGoogleMap != null) {
@@ -294,7 +341,7 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
     }
 
 
-    // TODO: marker not completely reset
+    // TODO: marker # not completely reset
 
     private void addPolylinesToMap(final DirectionsResult result) {
 
@@ -440,44 +487,6 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
         options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
     }
 
-    private void expandMapAnimation() {
-        ViewWeightAnimationWrapper mapAnimationWrapper = new ViewWeightAnimationWrapper(mMapContainer);
-        ObjectAnimator mapAnimation = ObjectAnimator.ofFloat(mapAnimationWrapper,
-                "weight",
-                50,
-                100);
-        mapAnimation.setDuration(800);
-
-        ViewWeightAnimationWrapper recyclerAnimationWrapper = new ViewWeightAnimationWrapper(mRecyclerView);
-        ObjectAnimator recyclerAnimation = ObjectAnimator.ofFloat(recyclerAnimationWrapper,
-                "weight",
-                50,
-                0);
-        recyclerAnimation.setDuration(800);
-
-        recyclerAnimation.start();
-        mapAnimation.start();
-    }
-
-    private void contractMapAnimation() {
-        ViewWeightAnimationWrapper mapAnimationWrapper = new ViewWeightAnimationWrapper(mMapContainer);
-        ObjectAnimator mapAnimation = ObjectAnimator.ofFloat(mapAnimationWrapper,
-                "weight",
-                100,
-                50);
-        mapAnimation.setDuration(800);
-
-        ViewWeightAnimationWrapper recyclerAnimationWrapper = new ViewWeightAnimationWrapper(mRecyclerView);
-        ObjectAnimator recyclerAnimation = ObjectAnimator.ofFloat(recyclerAnimationWrapper,
-                "weight",
-                0,
-                50);
-        recyclerAnimation.setDuration(800);
-
-        recyclerAnimation.start();
-        mapAnimation.start();
-    }
-
     private void initGoogleMap(Bundle savedInstanceState) {
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -494,7 +503,46 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
         }
     }
 
-    private void calculateDirections(Marker marker) {
+
+    public void calculateDuration(Marker marker)
+    {
+
+        com.google.maps.model.LatLng destination = new com.google.maps.model.LatLng(
+                marker.getPosition().latitude,
+                marker.getPosition().longitude
+        );
+
+        DirectionsApiRequest directions = new DirectionsApiRequest(mGeoApiContext);
+
+        directions.alternatives(true); // shows all possible routes
+        directions.origin(
+                new com.google.maps.model.LatLng(
+                        currentLocation.getLatitude(),
+                        currentLocation.getLongitude()
+                )
+        );
+
+        // Log.d(TAG, "calculateDirections: destination: " + destination.toString());
+        directions.destination(destination).setCallback(new PendingResult.Callback<DirectionsResult>() {
+            @Override
+            public void onResult(DirectionsResult result) {
+                Log.d(TAG, "calculateDuration: duration: " + result.routes[0].legs[0].duration);
+
+
+               tempDuration = result.routes[0].legs[0].duration.toString();
+
+            }
+
+            @Override
+            public void onFailure(Throwable e) {
+                Log.e(TAG, "calculateDuration: Failed to get directions: " + e.getMessage());
+
+            }
+        });
+
+    }
+
+    public void calculateDirections(Marker marker) {
         Log.d(TAG, "calculateDirections: calculating directions.");
 
 
@@ -541,7 +589,6 @@ public class MapsActivity extends Fragment implements OnMapReadyCallback, View.O
 
     @Override
     public void onInfoWindowClick(final Marker marker) {
-
         if(marker.getTitle().contains("Trip")){
 
             final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
