@@ -42,7 +42,6 @@ public class ViewActivity extends AppCompatActivity implements DataCommunication
     ////
     private FirebaseAuth mAuth;
     private static final String TAG = "ViewActivity";
-    private ArrayList<RecyclerViewFragmentAbstractModel> modelList;
     private HashMap<Integer, Marker> markerList;
 
     private BottomSheetBehavior mBottomSheetBehavior;
@@ -99,16 +98,6 @@ public class ViewActivity extends AppCompatActivity implements DataCommunication
         authenticate();
     }
 
-    @Override
-    public ArrayList<RecyclerViewFragmentAbstractModel> getModelList(){
-        return modelList;
-    }
-
-    @Override
-    public void setModelList(ArrayList<RecyclerViewFragmentAbstractModel> modelList) {
-
-        this.modelList = modelList;
-    }
 
     @Override
     public void setMarkerList(HashMap<Integer, Marker> markerList) {

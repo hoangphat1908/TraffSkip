@@ -43,9 +43,6 @@
             android:onClick="signOut"/>
 
 
-        <fragment class="com.example.myapplication.RecyclerViewFragment"
-            android:id="@+id/recycler_view_activity"
-            android:layout_width="match_parent" android:layout_height="0dp"  android:layout_weight="0" />
 
         <RelativeLayout
             android:layout_width="match_parent"
