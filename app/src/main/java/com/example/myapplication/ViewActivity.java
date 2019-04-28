@@ -10,15 +10,19 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +54,9 @@ public class ViewActivity extends AppCompatActivity implements DataCommunication
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+      //  setContentView(R.layout.activity_view); // First Screen - Map View
+        setContentView(R.layout.activity_login);// First Screen - Login View
         mAuth = FirebaseAuth.getInstance();
         authenticate();
 
@@ -67,12 +73,23 @@ public class ViewActivity extends AppCompatActivity implements DataCommunication
 
     }
 
+    public void switchToCreateAccount(View view){
+        Intent intent = new Intent(this, CreateAccountActivity.class);
+        startActivity(intent);
+    }
+
+
+
     public void authenticate() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
 
+
+
+/*
         TextView greetingsTV = (TextView) findViewById(R.id.tv_greetings);
         Button authButton = (Button) findViewById(R.id.btn_to_auth);
         Button signOutButton = (Button) findViewById(R.id.btn_sign_out);
+
 
         if (currentUser != null) {
             greetingsTV.setVisibility(View.VISIBLE);
@@ -85,6 +102,50 @@ public class ViewActivity extends AppCompatActivity implements DataCommunication
             authButton.setVisibility(View.VISIBLE);
             signOutButton.setVisibility(View.GONE);
         }
+        */
+    }
+
+    public void signInWithEmailAndPassword(View view){
+
+        String email = ((EditText)findViewById(R.id.email_login)).getText().toString();
+        String password = ((EditText)findViewById(R.id.password_login)).getText().toString();
+
+        // Check for empty inputs
+        if(!email.equals("")||!password.equals(""))
+        {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                logIn();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(getApplicationContext(), "Authentication failed. Please enter correct email or password",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+
+                            // ...
+                        }
+                    });
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), "Email or password field is empty",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void logIn(){
+       //  Intent intent = new Intent(this, ViewActivity.class);
+       // Intent intent = new Intent(this, .class);
+
+      //  startActivity(intent);
+        setContentView(R.layout.activity_view);
     }
 
     public void switchToAuth(View view) {

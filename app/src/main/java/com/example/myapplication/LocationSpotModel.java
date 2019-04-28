@@ -5,7 +5,7 @@ import com.google.firebase.firestore.GeoPoint;
 public class LocationSpotModel {
 
 
-    public LocationSpotModel(int locationId, String locationName, GeoPoint latlng, int maxCompacity, int currentCompacity, String locationAddress, String openCloseTime) {
+    public LocationSpotModel(String locationId, String locationName, GeoPoint latlng, int maxCompacity, int currentCompacity, String locationAddress, String openCloseTime) {
         this.locationId = locationId;
         this.locationName = locationName;
         this.latlng = latlng;
@@ -13,13 +13,14 @@ public class LocationSpotModel {
         this.currentCompacity = currentCompacity;
         this.locationAddress = locationAddress;
         this.openCloseTime = openCloseTime;
+
     }
 
-    public int getLocationId() {
+    public String getLocationId() {
         return locationId;
     }
 
-    public void setLocationId(int locationId) {
+    public void setLocationId(String locationId) {
         this.locationId = locationId;
     }
 
@@ -63,7 +64,7 @@ public class LocationSpotModel {
         this.openCloseTime = openCloseTime;
     }
 
-    private int locationId;
+    private String locationId;
     private String locationName;
     private GeoPoint latlng;
 
@@ -73,6 +74,17 @@ public class LocationSpotModel {
 
     private String locationAddress;
     private String openCloseTime;
+
+
+    public String getGarageImg() {
+        return garageImg;
+    }
+
+    public void setGarageImg(String garageImg) {
+        this.garageImg = garageImg;
+    }
+
+    private String garageImg;
 
 
     private LocationSpotModel(){}

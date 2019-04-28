@@ -22,7 +22,7 @@
         android:weightSum="100"
         android:background="@android:color/white">
 
-
+<!--
         <TextView
             android:id="@+id/tv_greetings"
             android:layout_width="match_parent"
@@ -42,7 +42,7 @@
             android:text= "@string/logout_register"
             android:onClick="signOut"/>
 
-
+-->
 
         <RelativeLayout
             android:layout_width="match_parent"
