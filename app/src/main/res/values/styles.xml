@@ -13,7 +13,7 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="colorPrimary">#5f8ee4</item>
-        <item name="colorPrimaryDark">#5f8ee4</item>
+        <item name="colorPrimaryDark">#0036ff</item>
         <item name="colorAccent">#6CC887</item>
         <item name="actionMenuTextColor">#6CC887</item>
 
