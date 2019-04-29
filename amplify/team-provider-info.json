@@ -1,0 +1,14 @@
+{
+    "tsenv": {
+        "awscloudformation": {
+            "AuthRoleName": "traffskip-20190415143851-authRole",
+            "UnauthRoleArn": "arn:aws:iam::836654849154:role/traffskip-20190415143851-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::836654849154:role/traffskip-20190415143851-authRole",
+            "Region": "ap-south-1",
+            "DeploymentBucketName": "traffskip-20190415143851-deployment",
+            "UnauthRoleName": "traffskip-20190415143851-unauthRole",
+            "StackName": "traffskip-20190415143851",
+            "StackId": "arn:aws:cloudformation:ap-south-1:836654849154:stack/traffskip-20190415143851/deb862e0-5fc6-11e9-ac2d-0654b35760ac"
+        }
+    }
+}

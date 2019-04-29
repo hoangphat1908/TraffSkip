@@ -1,0 +1,12 @@
+type Todo @model {
+  id: ID!
+  name: String!
+  description: String
+}
+
+type LocationInfo @model {
+  id: ID!
+  locationName: String
+  total: Int
+  remaining: Int
+}

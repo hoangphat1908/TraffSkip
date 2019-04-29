@@ -7,26 +7,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.amazonaws.amplify.generated.graphql.ListTodosQuery;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.ViewHolder> {
 
-    private List<ListTodosQuery.Item> mData = new ArrayList<>();;
+    private List<Comment> mData = new ArrayList<>();;
     private LayoutInflater mInflater;
 
 
     // data is passed into the constructor
-    MyAdapter(Context context) {
+    CommentsAdapter(Context context) {
         this.mInflater = LayoutInflater.from(context);
     }
 
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.recyclerview_row, parent, false);
+        View view = mInflater.inflate(R.layout.comment_item_recycler_list, parent, false);
         return new ViewHolder(view);
     }
 
@@ -43,7 +41,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     // resets the list with a new set of data
-    public void setItems(List<ListTodosQuery.Item> items) {
+    public void setItems(List<Comment> items) {
         mData = items;
     }
 
@@ -54,13 +52,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         ViewHolder(View itemView) {
             super(itemView);
-            txt_name = itemView.findViewById(R.id.txt_name);
-            txt_description = itemView.findViewById(R.id.txt_description);
+            txt_name = itemView.findViewById(R.id.item_txt_title);
+            txt_description = itemView.findViewById(R.id.item_txt_message);
         }
 
-        void bindData(ListTodosQuery.Item item) {
-            txt_name.setText(item.name());
-            txt_description.setText(item.description());
+        void bindData(Comment item) {
+            txt_name.setText(item.getUsername());
+            txt_description.setText(item.getBody());
         }
     }
 }

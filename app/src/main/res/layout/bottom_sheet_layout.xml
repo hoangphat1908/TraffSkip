@@ -9,190 +9,282 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:padding="16dp"
-
-    >
+    android:padding="16dp">
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/fragment_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="500dp"
         android:layout_gravity="bottom"
         android:background="@android:color/white"
-        android:clipToPadding="true"
+        android:clipToPadding="true">
 
-        >
-
-        <android.support.constraint.ConstraintLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-            <TextView
-                android:id="@+id/locationName"
-                android:layout_width="229dp"
-                android:layout_height="wrap_content"
-                android:layout_row="0"
-                android:layout_column="0"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="-1dp"
-                android:gravity="top"
-                android:letterSpacing="0.2"
-                android:text="Location_name"
-                android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                android:textSize="20sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <TextView
-                android:id="@+id/locationType"
-                android:layout_width="113dp"
-                android:layout_height="23dp"
-                android:layout_row="0"
-                android:layout_column="0"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="-1dp"
-                android:layout_marginBottom="8dp"
-                android:gravity="center"
-                android:text="Parking Garage ·"
-                android:textColor="#a6a6a6 "
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.166" />
-
-
-            <TextView
-                android:id="@+id/locationDuration"
-                android:layout_width="107dp"
-                android:layout_height="22dp"
-                android:layout_row="0"
-                android:layout_column="0"
-                android:layout_marginStart="120dp"
-                android:layout_marginLeft="120dp"
-                android:layout_marginTop="-1dp"
-                android:layout_marginBottom="8dp"
-                android:background="#00FFFFFF"
-                android:drawableLeft="@drawable/ic_directions_car_black_24dp"
-                android:gravity="bottom"
-                android:text=" 30 mins"
-                android:textColor="#a6a6a6 "
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.173" />
-
-
-            <Button
-                android:id="@+id/directionButton"
-                android:layout_width="118dp"
-                android:layout_height="wrap_content"
-                android:layout_row="0"
-                android:layout_column="2"
-
-                android:layout_marginEnd="8dp"
-
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/round_button"
-                android:drawableLeft="@drawable/ic_directions_black_24dp"
-                android:minHeight="100px"
-                android:text="Directions"
-                android:textColor="#FFFF"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <View
-                android:id="@+id/view"
-                style="@style/Divider"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="52dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <Button
-                android:id="@+id/openCloseTimeButton"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="132dp"
-                android:background="@drawable/textlines"
-                android:drawableLeft="@drawable/ic_access_time_black_24dp"
-                android:paddingLeft="20dip"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/openCloseTimeText"
+
+                <TextView
+                    android:id="@+id/locationName"
+                    android:layout_width="229dp"
+                    android:layout_height="wrap_content"
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="-1dp"
+                    android:gravity="top"
+                    android:letterSpacing="0.2"
+                    android:text="Location_name"
+                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <TextView
+                    android:id="@+id/locationType"
+                    android:layout_width="113dp"
+                    android:layout_height="23dp"
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="-1dp"
+                    android:layout_marginBottom="8dp"
+                    android:gravity="center"
+                    android:text="Parking Garage ·"
+                    android:textColor="#a6a6a6 "
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.166" />
+
+
+                <TextView
+                    android:id="@+id/locationDuration"
+                    android:layout_width="107dp"
+                    android:layout_height="22dp"
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:layout_marginStart="120dp"
+                    android:layout_marginLeft="120dp"
+                    android:layout_marginTop="-1dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="#00FFFFFF"
+                    android:drawableLeft="@drawable/ic_directions_car_black_24dp"
+                    android:gravity="bottom"
+                    android:text=" 30 mins"
+                    android:textColor="#a6a6a6 "
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.173" />
+
+
+                <Button
+                    android:id="@+id/directionButton"
+                    android:layout_width="118dp"
+                    android:layout_height="wrap_content"
+                    android:layout_row="0"
+                    android:layout_column="2"
+
+                    android:layout_marginEnd="8dp"
+
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/round_button"
+                    android:drawableLeft="@drawable/ic_directions_black_24dp"
+                    android:minHeight="100px"
+                    android:text="Directions"
+                    android:textColor="#FFFF"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <View
+                    android:id="@+id/view"
+                    style="@style/Divider"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="52dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+                <Button
+                    android:id="@+id/locationAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="84dp"
+                    android:background="@drawable/textlines"
+                    android:drawableLeft="@drawable/ic_location_on_black_24dp"
+                    android:paddingLeft="20dip"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/locationText"
+                    android:layout_width="255dp"
+                    android:layout_height="20dp"
+
+
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+
+                    android:autoSizeMaxTextSize="15sp"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Address Address"
+                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    app:layout_constraintBottom_toBottomOf="@+id/locationAddress"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/locationAddress" />
+
+                <Button
+                    android:id="@+id/openCloseTimeButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="132dp"
+                    android:background="@drawable/textlines"
+                    android:drawableLeft="@drawable/ic_access_time_black_24dp"
+                    android:paddingLeft="20dip"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/openCloseTimeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="4dp"
+                    android:text=" 1:00 A.M."
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/openCloseTimeButton"
+                    app:layout_constraintEnd_toEndOf="@+id/openCloseTimeButton"
+                    app:layout_constraintStart_toStartOf="@+id/openCloseTimeButton"
+                    app:layout_constraintTop_toTopOf="@+id/openCloseTimeButton" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <Button
+                android:id="@+id/button_bookmark"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="4dp"
-                android:text=" 1:00 A.M."
-                android:fontFamily="sans-serif-medium"
-                android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                android:textSize="15sp"
-                app:layout_constraintBottom_toBottomOf="@+id/openCloseTimeButton"
-                app:layout_constraintEnd_toEndOf="@+id/openCloseTimeButton"
-                app:layout_constraintStart_toStartOf="@+id/openCloseTimeButton"
-                app:layout_constraintTop_toTopOf="@+id/openCloseTimeButton" />
-
-
-            <Button
-                android:id="@+id/locationAddress"
+                android:drawableLeft="@drawable/star"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@color/common_google_signin_btn_text_dark_default"
+                android:padding="5dp"
+                android:text="Save to favorites"/>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="84dp"
-                android:background="@drawable/textlines"
-                android:drawableLeft="@drawable/ic_location_on_black_24dp"
-                android:paddingLeft="20dip"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_marginTop="20dp"
+                android:paddingLeft="20dp"
+                android:paddingTop="4dp"
+                android:text="Parking status"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                android:textSize="25sp"/>
+            <TextView
+                android:id="@+id/totalTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingTop="4dp"
+                android:text="Total spots: 10"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/quantum_bluegrey700"
+                android:textSize="15sp"/>
+            <TextView
+                android:id="@+id/remainingTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingTop="4dp"
+                android:text="Remaining spots: 5"
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/quantum_bluegrey700"
+                android:textSize="15sp"/>
 
             <TextView
-                android:id="@+id/locationText"
-                android:layout_width="255dp"
-                android:layout_height="20dp"
-
-
-                android:layout_marginEnd="8dp"
-                android:layout_marginRight="8dp"
-
-                android:autoSizeMaxTextSize="15sp"
-                android:autoSizeMinTextSize="12sp"
-                android:autoSizeStepGranularity="2sp"
-                android:autoSizeTextType="uniform"
+                android:id="@+id/peakTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingTop="4dp"
+                android:text="Peak hours: 7:30 A.M. to 3:00 P.M."
                 android:fontFamily="sans-serif-medium"
-                android:text="Address Address"
+                android:textColor="@color/quantum_bluegrey700"
+                android:textSize="15sp"/>
+
+            <com.anychart.AnyChartView
+                android:id="@+id/any_chart_view"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="20dp"
+                />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingTop="4dp"
+                android:text="Comments"
+                android:fontFamily="sans-serif-medium"
                 android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                app:layout_constraintBottom_toBottomOf="@+id/locationAddress"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/locationAddress" />
+                android:textSize="25sp"/>
 
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-        </android.support.constraint.ConstraintLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:id="@+id/insertCommentLayout">
+
+                <EditText
+                    android:id="@+id/commentEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="textPersonName"
+                    android:hint="Enter your comment" />
+                <Button
+                    android:id="@+id/commentButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Submit"/>
+            </LinearLayout>
+        </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
-
-
 </LinearLayout>
 
 

@@ -12,6 +12,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="com.example.myapplication.permission.MAPS_RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <permission
         android:name="com.example.myapplication.permission.MAPS_RECEIVE"
@@ -50,7 +53,7 @@
         -->
         <activity
             android:name=".ViewActivity"
-            android:label="@string/title_activity_main2"
+            android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.Template.Base">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,9 +61,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AuthorizationActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".CreateAccountActivity" />
+        <activity android:name=".BookmarksActivity" />
+
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
     </application>
 
 </manifest>

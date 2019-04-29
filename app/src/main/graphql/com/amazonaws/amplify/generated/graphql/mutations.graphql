@@ -1,0 +1,46 @@
+# this is an auto generated file. This will be overwritten
+mutation CreateTodo($input: CreateTodoInput!) {
+  createTodo(input: $input) {
+    id
+    name
+    description
+  }
+}
+mutation UpdateTodo($input: UpdateTodoInput!) {
+  updateTodo(input: $input) {
+    id
+    name
+    description
+  }
+}
+mutation DeleteTodo($input: DeleteTodoInput!) {
+  deleteTodo(input: $input) {
+    id
+    name
+    description
+  }
+}
+mutation CreateLocationInfo($input: CreateLocationInfoInput!) {
+  createLocationInfo(input: $input) {
+    id
+    locationName
+    total
+    remaining
+  }
+}
+mutation UpdateLocationInfo($input: UpdateLocationInfoInput!) {
+  updateLocationInfo(input: $input) {
+    id
+    locationName
+    total
+    remaining
+  }
+}
+mutation DeleteLocationInfo($input: DeleteLocationInfoInput!) {
+  deleteLocationInfo(input: $input) {
+    id
+    locationName
+    total
+    remaining
+  }
+}

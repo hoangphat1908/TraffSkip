@@ -1,72 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
-<android.support.design.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
-    android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:weightSum="100"
+    android:background="@android:color/white">
 
-    >
-
-
-    <LinearLayout
-
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:weightSum="100"
-        android:background="@android:color/white">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+    <fragment android:id="@+id/autocomplete_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+        />
 
-        <TextView
-            android:id="@+id/tv_greetings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/btn_to_auth"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text= "@string/login_register"
-            android:onClick="switchToAuth"/>
-        <Button
-            android:id="@+id/btn_sign_out"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text= "@string/logout_register"
-            android:onClick="signOut"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="100"
+        android:id="@+id/map_container"
+        android:gravity="center">
 
 
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="100"
-            android:id="@+id/map_container"
-            android:gravity="center"
-            >
+        <fragment class="com.example.myapplication.MapsActivity"
+            android:id="@+id/maps_activity"
+            android:layout_width="match_parent" android:layout_height="match_parent" />
 
-            <fragment class="com.example.myapplication.MapsActivity"
-                android:id="@+id/maps_activity"
-                android:layout_width="match_parent" android:layout_height="match_parent" />
-
-        </RelativeLayout>
-
-
-
-
-    </LinearLayout>
-
-
-
-<!--
-
--->
-</android.support.design.widget.CoordinatorLayout>
+    </RelativeLayout>
+</LinearLayout>
 

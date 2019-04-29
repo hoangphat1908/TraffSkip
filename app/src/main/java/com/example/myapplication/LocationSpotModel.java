@@ -3,23 +3,28 @@ package com.example.myapplication;
 import com.google.firebase.firestore.GeoPoint;
 
 public class LocationSpotModel {
+    private String locationId;
+    private String locationName;
+    private GeoPoint latlng;
+    private String locationAddress;
+    private String openCloseTime;
+    private LocationInfoModel locationInfo;
 
+    private LocationSpotModel(){}
 
-    public LocationSpotModel(int locationId, String locationName, GeoPoint latlng, int maxCompacity, int currentCompacity, String locationAddress, String openCloseTime) {
+    public LocationSpotModel(String locationId, String locationName, GeoPoint latlng, String locationAddress, String openCloseTime) {
         this.locationId = locationId;
         this.locationName = locationName;
         this.latlng = latlng;
-        this.maxCompacity = maxCompacity;
-        this.currentCompacity = currentCompacity;
         this.locationAddress = locationAddress;
         this.openCloseTime = openCloseTime;
     }
 
-    public int getLocationId() {
+    public String getLocationId() {
         return locationId;
     }
 
-    public void setLocationId(int locationId) {
+    public void setLocationId(String locationId) {
         this.locationId = locationId;
     }
 
@@ -29,22 +34,6 @@ public class LocationSpotModel {
 
     public void setLocationName(String locationName) {
         this.locationName = locationName;
-    }
-
-    public int getMaxCompacity() {
-        return maxCompacity;
-    }
-
-    public void setMaxCompacity(int maxCompacity) {
-        this.maxCompacity = maxCompacity;
-    }
-
-    public int getCurrentCompacity() {
-        return currentCompacity;
-    }
-
-    public void setCurrentCompacity(int currentCompacity) {
-        this.currentCompacity = currentCompacity;
     }
 
     public String getLocationAddress() {
@@ -63,20 +52,6 @@ public class LocationSpotModel {
         this.openCloseTime = openCloseTime;
     }
 
-    private int locationId;
-    private String locationName;
-    private GeoPoint latlng;
-
-    private int maxCompacity;
-
-    private int currentCompacity;
-
-    private String locationAddress;
-    private String openCloseTime;
-
-
-    private LocationSpotModel(){}
-
     public GeoPoint getLatlng() {
         return latlng;
     }
@@ -85,6 +60,13 @@ public class LocationSpotModel {
         this.latlng = latlng;
     }
 
+    public LocationInfoModel getLocationInfo() {
+        return locationInfo;
+    }
+
+    public void setLocationInfo(LocationInfoModel locationInfo) {
+        this.locationInfo = locationInfo;
+    }
 
     //Capacity graph?
     //Average traffic?
