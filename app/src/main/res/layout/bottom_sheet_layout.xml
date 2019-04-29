@@ -60,10 +60,10 @@
                     android:text="Parking Garage ·"
                     android:textColor="#a6a6a6 "
                     android:textSize="15sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/view"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.166" />
+                    app:layout_constraintVertical_bias="1.0" />
 
 
                 <TextView
@@ -82,10 +82,10 @@
                     android:text=" 30 mins"
                     android:textColor="#a6a6a6 "
                     android:textSize="15sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/view"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.173" />
+                    app:layout_constraintVertical_bias="1.0" />
 
 
                 <Button
@@ -124,43 +124,10 @@
 
 
                 <Button
-                    android:id="@+id/locationAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="84dp"
-                    android:background="@drawable/textlines"
-                    android:drawableLeft="@drawable/ic_location_on_black_24dp"
-                    android:paddingLeft="20dip"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/locationText"
-                    android:layout_width="255dp"
-                    android:layout_height="20dp"
-
-
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
-
-                    android:autoSizeMaxTextSize="15sp"
-                    android:autoSizeMinTextSize="12sp"
-                    android:autoSizeStepGranularity="2sp"
-                    android:autoSizeTextType="uniform"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Address Address"
-                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
-                    app:layout_constraintBottom_toBottomOf="@+id/locationAddress"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/locationAddress" />
-
-                <Button
                     android:id="@+id/openCloseTimeButton"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="132dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="332dp"
                     android:background="@drawable/textlines"
                     android:drawableLeft="@drawable/ic_access_time_black_24dp"
                     android:paddingLeft="20dip"
@@ -172,20 +139,66 @@
                 <TextView
                     android:id="@+id/openCloseTimeText"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="32dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginLeft="4dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginRight="8dp"
                     android:layout_marginBottom="4dp"
-                    android:text=" 1:00 A.M."
                     android:fontFamily="sans-serif-medium"
+                    android:text=" 1:00 A.M."
                     android:textColor="@color/common_google_signin_btn_text_dark_focused"
                     android:textSize="15sp"
                     app:layout_constraintBottom_toBottomOf="@+id/openCloseTimeButton"
                     app:layout_constraintEnd_toEndOf="@+id/openCloseTimeButton"
+                    app:layout_constraintHorizontal_bias="0.52"
                     app:layout_constraintStart_toStartOf="@+id/openCloseTimeButton"
-                    app:layout_constraintTop_toTopOf="@+id/openCloseTimeButton" />
+                    app:layout_constraintTop_toTopOf="@+id/openCloseTimeButton"
+                    app:layout_constraintVertical_bias="1.0" />
+
+
+                <Button
+                    android:id="@+id/locationAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="284dp"
+                    android:background="@drawable/textlines"
+                    android:drawableLeft="@drawable/ic_location_on_black_24dp"
+                    android:paddingLeft="20dip"
+                    app:layout_constraintBottom_toTopOf="@+id/openCloseTimeButton"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/locationText"
+                    android:layout_width="255dp"
+
+
+                    android:layout_height="33dp"
+
+                    android:autoSizeMaxTextSize="15sp"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeStepGranularity="2sp"
+                    android:autoSizeTextType="uniform"
+                    android:fontFamily="sans-serif-medium"
+                    android:text="Address Address"
+                    android:textColor="@color/common_google_signin_btn_text_dark_focused"
+                    app:layout_constraintBottom_toBottomOf="@+id/locationAddress"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/locationAddress"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <ImageView
+                    android:layout_width="384dp"
+                    android:layout_height="225dp"
+                    android:id="@+id/garageImg"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    app:layout_constraintBottom_toTopOf="@+id/locationAddress"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view" />
 
             </android.support.constraint.ConstraintLayout>
 

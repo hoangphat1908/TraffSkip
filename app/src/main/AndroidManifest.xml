@@ -29,7 +29,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        >
+
 
 
         <uses-library
@@ -66,6 +69,7 @@
         <activity android:name=".BookmarksActivity" />
 
         <service android:name="org.eclipse.paho.android.service.MqttService" />
+
     </application>
 
 </manifest>

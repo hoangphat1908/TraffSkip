@@ -9,6 +9,7 @@ public class LocationSpotModel {
     private String locationAddress;
     private String openCloseTime;
     private LocationInfoModel locationInfo;
+    private String garageImg;
 
     private LocationSpotModel(){}
 
@@ -18,6 +19,7 @@ public class LocationSpotModel {
         this.latlng = latlng;
         this.locationAddress = locationAddress;
         this.openCloseTime = openCloseTime;
+
     }
 
     public String getLocationId() {
@@ -50,6 +52,14 @@ public class LocationSpotModel {
 
     public void setOpenCloseTime(String openCloseTime) {
         this.openCloseTime = openCloseTime;
+    }
+
+    public String getGarageImg() {
+        return garageImg;
+    }
+
+    public void setGarageImg(String garageImg) {
+        this.garageImg = garageImg;
     }
 
     public GeoPoint getLatlng() {

@@ -2,6 +2,9 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -44,6 +47,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.maps.model.Marker;
+import com.squareup.picasso.Picasso;
+
+import java.io.InputStream;
+import java.net.URL;
 
 import static android.support.constraint.Constraints.TAG;
 import static com.amazonaws.mobile.auth.core.internal.util.ThreadUtils.runOnUiThread;
@@ -61,6 +73,8 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
     TextView locationDurationTextView;
     TextView totalTextView;
     TextView remainingTextView;
+    ImageView garageImgImageView;
+
     String locationName;
     Marker locationMarker;
     String duration;
@@ -76,6 +90,8 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+
+
         View view = inflater.inflate(R.layout.bottom_sheet_layout, container, false);
 
         locationNameTextView = (TextView) view.findViewById(R.id.locationName);
@@ -84,7 +100,12 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
         locationDurationTextView = (TextView) view.findViewById(R.id.locationDuration);
         totalTextView = (TextView) view.findViewById(R.id.totalTextView);
         remainingTextView = (TextView) view.findViewById(R.id.remainingTextView);
-
+        garageImgImageView = (ImageView) view.findViewById(R.id.garageImg);
+        Picasso.with(getContext()).load(locationSpot.getGarageImg()).resize(384, 225).into(garageImgImageView);
+/*
+            new DownloadImageTask((ImageView) view.findViewById(R.id.garageImg))
+                    .execute(locationSpot.getGarageImg());
+*/
 
         Button directionButton = view.findViewById(R.id.directionButton);
         Button openCloseTimeButton = view.findViewById(R.id.openCloseTimeButton);
@@ -122,7 +143,19 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
                 locationAddressTextView.setText(locationSpot.getLocationAddress());
                 openCloseTimeTextView.setText("Opens "+locationSpot.getOpenCloseTime());
 
-
+                // Load Img
+                    /*
+                    try{
+                        URL url = new URL(locationSpot.getGarageImg());
+                        Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                        garageImgImageView.setImageBitmap(bmp);
+                    }catch(Exception e)
+                    {
+                        Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "garageImg ERROR:"+locationSpot.getGarageImg());
+                        e.printStackTrace();
+                    }
+*/
 
 
                 Log.d(TAG, "onShow: locationName: "+ locationName);
@@ -254,7 +287,32 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
         }
 
     }
+/*
+    private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+        ImageView bmImage;
 
+        public DownloadImageTask(ImageView bmImage) {
+            this.bmImage = bmImage;
+        }
+
+        protected Bitmap doInBackground(String... urls) {
+            String urldisplay = urls[0];
+            Bitmap mIcon11 = null;
+            try {
+                InputStream in = new java.net.URL(urldisplay).openStream();
+                mIcon11 = BitmapFactory.decodeStream(in);
+            } catch (Exception e) {
+                Log.e("Error", e.getMessage());
+                e.printStackTrace();
+            }
+            return mIcon11;
+        }
+
+        protected void onPostExecute(Bitmap result) {
+            bmImage.setImageBitmap(result);
+        }
+    }
+*/
 
 
 }

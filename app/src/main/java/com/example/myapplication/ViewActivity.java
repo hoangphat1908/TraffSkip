@@ -17,7 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.amazonaws.amplify.generated.graphql.ListLocationInfosQuery;
@@ -41,6 +43,7 @@ import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import android.util.Log;
@@ -87,7 +90,11 @@ public class ViewActivity extends AppCompatActivity implements DataCommunication
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_view); // First Screen - Map View
+        //setContentView(R.layout.activity_login);// First Screen - Login View
+        mAuth = FirebaseAuth.getInstance();
+        authenticate();
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
@@ -140,7 +147,7 @@ public class ViewActivity extends AppCompatActivity implements DataCommunication
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        if(mAuth.getCurrentUser() == null)
+        if (mAuth.getCurrentUser() == null)
             menu.add(0, MENU_LOGIN, Menu.NONE, R.string.login);
         else {
             menu.add(0, MENU_ACCOUNT, Menu.NONE, "Account");
@@ -149,6 +156,60 @@ public class ViewActivity extends AppCompatActivity implements DataCommunication
 
         }
         return super.onPrepareOptionsMenu(menu);
+    }
+    public void switchToCreateAccount(View view){
+        Intent intent = new Intent(this, CreateAccountActivity.class);
+        startActivity(intent);
+    }
+
+
+
+    public void authenticate() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+    }
+
+
+    public void signInWithEmailAndPassword(View view){
+
+        String email = ((EditText)findViewById(R.id.email_login)).getText().toString();
+        String password = ((EditText)findViewById(R.id.password_login)).getText().toString();
+
+        // Check for empty inputs
+        if(!email.equals("")||!password.equals(""))
+        {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "signInWithEmail:success");
+                                logIn();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                Log.w(TAG, "signInWithEmail:failure", task.getException());
+                                Toast.makeText(getApplicationContext(), "Authentication failed. Please enter correct email or password",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+
+                            // ...
+                        }
+                    });
+        }
+        else
+        {
+            Toast.makeText(getApplicationContext(), "Email or password field is empty",
+                    Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    public void logIn(){
+       //  Intent intent = new Intent(this, ViewActivity.class);
+       // Intent intent = new Intent(this, .class);
+
+      //  startActivity(intent);
+        setContentView(R.layout.activity_view);
     }
 
     @Override
