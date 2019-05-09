@@ -214,7 +214,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:paddingLeft="20dp"
                 android:paddingTop="4dp"
                 android:text="Parking status"
@@ -261,10 +261,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="30dp"
                 android:paddingTop="4dp"
-                android:text="Per Half-Hour (Maximum daily rate of $8)	: $1.00/half-hour\n
-Evenings after 5:30 p.m. (Monday - Friday): $5.00/day\n
-All Day (Weekends and Holidays): $5.00/day\n
-Overnight (Overnight permits expire at 8:00 a.m.):	$10.00/night"
+                android:text="$10.00/night"
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/quantum_grey700"
                 android:textSize="15sp"/>

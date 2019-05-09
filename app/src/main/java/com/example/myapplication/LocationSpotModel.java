@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import com.google.firebase.firestore.GeoPoint;
 
+import java.util.List;
+
 public class LocationSpotModel {
     private String locationId;
     private String locationName;
@@ -10,6 +12,10 @@ public class LocationSpotModel {
     private String openCloseTime;
     private LocationInfoModel locationInfo;
     private String garageImg;
+
+    private String parkingRate;
+
+    private List<Floor> floors;
 
     private LocationSpotModel(){}
 
@@ -77,14 +83,19 @@ public class LocationSpotModel {
     public void setLocationInfo(LocationInfoModel locationInfo) {
         this.locationInfo = locationInfo;
     }
+    public String getParkingRate() {
+        return parkingRate;
+    }
 
-    //Capacity graph?
-    //Average traffic?
-    //List of reviews?? requires users information and comment info.
-    //image
+    public void setParkingRate(String parkingRate) {
+        this.parkingRate = parkingRate;
+    }
 
+    public List<Floor> getFloors() {
+        return floors;
+    }
 
-
-
-
+    public void setFloors(List<Floor> floors) {
+        this.floors = floors;
+    }
 }

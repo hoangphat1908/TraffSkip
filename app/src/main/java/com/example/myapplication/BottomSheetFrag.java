@@ -40,6 +40,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -71,7 +72,7 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
     TextView openCloseTimeTextView;
     TextView locationAddressTextView;
     TextView locationDurationTextView;
-    //TextView totalTextView;
+    TextView rateTextView;
     //TextView remainingTextView;
     ImageView garageImgImageView;
 
@@ -104,7 +105,8 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
         openCloseTimeTextView = (TextView) view.findViewById(R.id.openCloseTimeText);
         locationAddressTextView = (TextView) view.findViewById(R.id.locationText);
         locationDurationTextView = (TextView) view.findViewById(R.id.locationDuration);
-        //totalTextView = (TextView) view.findViewById(R.id.totalTextView);
+        rateTextView = (TextView) view.findViewById(R.id.rateTextView);
+        rateTextView.setSingleLine(false);
         //remainingTextView = (TextView) view.findViewById(R.id.remainingTextView);
         garageImgImageView = (ImageView) view.findViewById(R.id.garageImg);
         Picasso.with(getContext()).load(locationSpot.getGarageImg()).resize(384, 225).into(garageImgImageView);
@@ -148,7 +150,7 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
 
                 locationAddressTextView.setText(locationSpot.getLocationAddress());
                 openCloseTimeTextView.setText("Opens "+locationSpot.getOpenCloseTime());
-
+                rateTextView.setText(locationSpot.getParkingRate().replace("\\n", "\n"));
                 // Load Img
                     /*
                     try{
@@ -161,6 +163,7 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
                         Log.d(TAG, "garageImg ERROR:"+locationSpot.getGarageImg());
                         e.printStackTrace();
                     }
+
 */
 
 
@@ -200,7 +203,9 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
         fRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         fAdapter = new FloorsAdapter(this.getContext());
         fRecyclerView.setAdapter(fAdapter);
-        getFloors();
+        fAdapter.setItems(locationSpot.getFloors());
+        fAdapter.notifyDataSetChanged();
+        //getFloors();
 
 
         cRecyclerView = view.findViewById(R.id.recycler_view);
@@ -237,14 +242,16 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
         this.locationSpot = locationSpot;
         getLocationInfo();
     }
-
+    /**
     public void getFloors() {
+
         floorList.add(new Floor("1st Floor", 2, 20));
         floorList.add(new Floor("2nd Floor", 7, 20));
         floorList.add(new Floor("3rd Floor", 14, 14));
         fAdapter.setItems(floorList);
         fAdapter.notifyDataSetChanged();
     }
+    **/
 
     public void getComments() {
         database.collection("locationSpots").document(this.locationSpot.getLocationId()).collection("comments").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
