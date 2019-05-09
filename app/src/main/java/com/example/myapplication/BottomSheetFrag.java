@@ -71,8 +71,8 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
     TextView openCloseTimeTextView;
     TextView locationAddressTextView;
     TextView locationDurationTextView;
-    TextView totalTextView;
-    TextView remainingTextView;
+    //TextView totalTextView;
+    //TextView remainingTextView;
     ImageView garageImgImageView;
 
     String locationName;
@@ -80,10 +80,16 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
     String duration;
 
     ///
-    RecyclerView mRecyclerView;
-    CommentsAdapter mAdapter;
+    RecyclerView fRecyclerView;
+    FloorsAdapter fAdapter;
 
+    ///
+    RecyclerView cRecyclerView;
+    CommentsAdapter cAdapter;
+
+    private List<Floor> floorList = new ArrayList<>();
     private List<Comment> commentList = new ArrayList<>();
+
     ///
 
     @Nullable
@@ -98,8 +104,8 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
         openCloseTimeTextView = (TextView) view.findViewById(R.id.openCloseTimeText);
         locationAddressTextView = (TextView) view.findViewById(R.id.locationText);
         locationDurationTextView = (TextView) view.findViewById(R.id.locationDuration);
-        totalTextView = (TextView) view.findViewById(R.id.totalTextView);
-        remainingTextView = (TextView) view.findViewById(R.id.remainingTextView);
+        //totalTextView = (TextView) view.findViewById(R.id.totalTextView);
+        //remainingTextView = (TextView) view.findViewById(R.id.remainingTextView);
         garageImgImageView = (ImageView) view.findViewById(R.id.garageImg);
         Picasso.with(getContext()).load(locationSpot.getGarageImg()).resize(384, 225).into(garageImgImageView);
 /*
@@ -190,14 +196,17 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
         Column column = cartesian.column(data);
         cartesian.yScale().maximum(1);
         anyChartView.setChart(cartesian);
+        fRecyclerView = view.findViewById(R.id.spots_recycler_view);
+        fRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        fAdapter = new FloorsAdapter(this.getContext());
+        fRecyclerView.setAdapter(fAdapter);
+        getFloors();
 
-        mRecyclerView = view.findViewById(R.id.recycler_view);
-        // use a linear layout manager
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        // specify an adapter (see also next example)
-        mAdapter = new CommentsAdapter(this.getContext());
-        mRecyclerView.setAdapter(mAdapter);
+        cRecyclerView = view.findViewById(R.id.recycler_view);
+        cRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        cAdapter = new CommentsAdapter(this.getContext());
+        cRecyclerView.setAdapter(cAdapter);
         getComments();
 
         final FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -229,14 +238,22 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
         getLocationInfo();
     }
 
+    public void getFloors() {
+        floorList.add(new Floor("1st Floor", 2, 20));
+        floorList.add(new Floor("2nd Floor", 7, 20));
+        floorList.add(new Floor("3rd Floor", 14, 14));
+        fAdapter.setItems(floorList);
+        fAdapter.notifyDataSetChanged();
+    }
+
     public void getComments() {
         database.collection("locationSpots").document(this.locationSpot.getLocationId()).collection("comments").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
                 commentList = queryDocumentSnapshots.toObjects(Comment.class);
-                mAdapter.setItems(commentList);
-                mAdapter.notifyDataSetChanged();
+                cAdapter.setItems(commentList);
+                cAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -260,8 +277,10 @@ public class BottomSheetFrag extends BottomSheetDialogFragment {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        /**
                         totalTextView.setText("Total spots: " + locationInfo.getTotalSpots());
                         remainingTextView.setText("Remaining spots: " + locationInfo.getRemainingSpots());
+                        */
                     }
                 });
             }
