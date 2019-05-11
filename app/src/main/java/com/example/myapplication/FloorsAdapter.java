@@ -6,7 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +19,12 @@ public class FloorsAdapter extends  RecyclerView.Adapter<FloorsAdapter.ViewHolde
 
     private List<Floor> mData = new ArrayList<>();
     private LayoutInflater mInflater;
-
+    private Context context;
 
     // data is passed into the constructor
     FloorsAdapter(Context context) {
         this.mInflater = LayoutInflater.from(context);
+        this.context = context;
     }
 
     // inflates the row layout from xml when needed
@@ -50,11 +55,16 @@ public class FloorsAdapter extends  RecyclerView.Adapter<FloorsAdapter.ViewHolde
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView txt_name;
         TextView txt_remain_total;
+        Button showOccupancy;
+        ImageView occupancyImageView;
+        boolean shown = false;
 
         ViewHolder(View itemView) {
             super(itemView);
             txt_name = itemView.findViewById(R.id.item_name);
             txt_remain_total = itemView.findViewById(R.id.item_remain_total);
+            showOccupancy = itemView.findViewById(R.id.show_occupancy_button);
+            occupancyImageView = itemView.findViewById(R.id.occupancy_image_view);
         }
 
         void bindData(Floor item) {
@@ -70,6 +80,20 @@ public class FloorsAdapter extends  RecyclerView.Adapter<FloorsAdapter.ViewHolde
                 txt_remain_total.setTextColor(Color.rgb(252,102,0));
             else
                 txt_remain_total.setTextColor(Color.GREEN);
+
+            if (item.getOccupancyImage()!=null) {
+                showOccupancy.setVisibility(View.VISIBLE);
+                Picasso.with(context).load(item.getOccupancyImage()).into(occupancyImageView);
+                showOccupancy.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        occupancyImageView.setVisibility(shown ? View.GONE : View.VISIBLE);
+                        shown = !shown;
+                    }
+                });
+            }
+
+
         }
     }
 }

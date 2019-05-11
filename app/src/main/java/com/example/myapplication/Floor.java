@@ -4,6 +4,7 @@ public class Floor {
     private String name;
     private int remaining;
     private int total;
+    private String occupancyImage;
     public Floor() {}
     public Floor(String name, int remaining, int total) {
         this.name = name;
@@ -33,5 +34,13 @@ public class Floor {
 
     public void setTotal(int total) {
         this.total = total;
+    }
+
+    public String getOccupancyImage() {
+        return occupancyImage;
+    }
+
+    public void setOccupancyImage(String occupancyImage) {
+        this.occupancyImage = occupancyImage;
     }
 }

@@ -1,22 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/item_name"
-        android:layout_width="80dp"
-        android:layout_height="wrap_content"
-        android:text="1st floor"
-        android:fontFamily="sans-serif-medium"
-        android:textColor="@color/quantum_bluegrey700"
-        android:textSize="15sp"/>
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/item_remain_total"
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="1st floor"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/quantum_bluegrey700"
+            android:textSize="15sp"/>
+
+        <TextView
+            android:id="@+id/item_remain_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15 / 20 spots left"
+            android:textColor="@color/quantum_googgreen"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="15sp"/>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/show_occupancy_button"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="15 / 20 spots left"
-        android:textColor="@color/quantum_googgreen"
-        android:fontFamily="sans-serif-medium"
-        android:textSize="15sp"/>
+        android:layout_height="30dp"
+        android:text="View occupancy map"
+        android:layout_marginLeft="20dp"
+        android:padding="5dp"
+        android:background="@color/quantum_white_100"
+        android:drawableEnd="@drawable/ic_sharp_expand_more_24px"
+        android:visibility="gone"/>
+    <ImageView
+        android:id="@+id/occupancy_image_view"
+        android:layout_width="368dp"
+        android:layout_height="248dp"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone" />
 </LinearLayout>

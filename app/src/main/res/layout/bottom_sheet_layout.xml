@@ -221,28 +221,6 @@
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/common_google_signin_btn_text_dark_focused"
                 android:textSize="25sp"/>
-            <!--
-            <TextView
-                android:id="@+id/totalTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingTop="4dp"
-                android:text="Total spots: 10"
-                android:fontFamily="sans-serif-medium"
-                android:textColor="@color/quantum_bluegrey700"
-                android:textSize="15sp"/>
-            <TextView
-                android:id="@+id/remainingTextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="20dp"
-                android:paddingTop="4dp"
-                android:text="Remaining spots: 5"
-                android:fontFamily="sans-serif-medium"
-                android:textColor="@color/quantum_bluegrey700"
-                android:textSize="15sp"/>
-            -->
 
             <TextView
                 android:layout_width="match_parent"
@@ -267,12 +245,11 @@
                 android:textSize="15sp"/>
 
             <TextView
-                android:id="@+id/peakTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:paddingTop="4dp"
-                android:text="Peak hours: 7:30 A.M. to 3:00 P.M."
+                android:text="Parking availability: "
                 android:fontFamily="sans-serif-medium"
                 android:textColor="@color/quantum_black_100"
                 android:textStyle="bold"
@@ -284,6 +261,28 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="20dp"
                 android:paddingTop="4dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:text="Peak hours: "
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/quantum_black_100"
+                android:textStyle="bold"
+                android:textSize="15sp"/>
+
+            <TextView
+                android:id="@+id/peakTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20dp"
+                android:paddingTop="4dp"
+                android:text="7:30 A.M. to 3:00 P.M."
+                android:fontFamily="sans-serif-medium"
+                android:textColor="@color/quantum_grey700"
+                android:textSize="15sp"/>
 
             <com.anychart.AnyChartView
                 android:id="@+id/any_chart_view"
